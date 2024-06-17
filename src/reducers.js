@@ -1,7 +1,10 @@
-import { ADD_CITY, REMOVE_CITY } from "./actions";
+import { ADD_CITY, REMOVE_CITY, SET_WEATHER_DATA } from "./actions";
 
 const initialState = {
   cityList: JSON.parse(localStorage.getItem("cityList")) || [],
+  weatherData: {},
+  searchDone: false,
+  errorMessage: "",
 };
 
 const rootReducer = (state = initialState, action) => {
@@ -21,6 +24,13 @@ const rootReducer = (state = initialState, action) => {
       return {
         ...state,
         cityList: newCityListRemove,
+      };
+    case SET_WEATHER_DATA:
+      return {
+        ...state,
+        weatherData: action.payload,
+        searchDone: true,
+        errorMessage: "",
       };
     default:
       return state;

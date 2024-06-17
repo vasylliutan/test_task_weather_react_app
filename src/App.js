@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import "./css/App.css";
+import { connect } from "react-redux";
+import { addCity, removeCity, setWeatherData } from "./actions";
 
 import SearchBar from "./components/SearchBar";
 import WeatherCard from "./components/WeatherCard";
@@ -9,21 +11,7 @@ import API_KEY from "./config.js";
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      weatherData: {
-        weather: "",
-        city: "",
-        country: "",
-        temp: 0,
-      },
-      searchDone: false,
-      savedCities: [],
-      hasSavedCities: false,
-      errorMessage: "",
-    };
-
     this.callWeatherData = this.callWeatherData.bind(this);
-    this.updateSavedCities = this.updateSavedCities.bind(this);
   }
 
   callWeatherData(city) {
@@ -46,14 +34,9 @@ class App extends Component {
           visibility: data.visibility,
           sunset: data.sys.sunset,
         };
-        this.setState({
-          weatherData: weatherObj,
-          searchDone: true,
-          errorMessage: "",
-        });
+        this.props.setWeatherData(weatherObj);
       })
       .catch((error) => {
-        // If an error is catch, it's sent to SearchBar as props
         this.setState({ errorMessage: error.message });
       });
 
@@ -65,33 +48,8 @@ class App extends Component {
     }
   }
 
-  updateSavedCities(cityArr) {
-    // hasCities is set to true if length is more than 0, otherwise false
-    const hasCities = cityArr.length > 0;
-    this.setState({ savedCities: cityArr, hasSavedCities: hasCities });
-  }
-
-  componentWillMount() {
-    // See if there's saved cities in localStorage before the App is mounted
-    // Tests didn't like parsing when localStorage.getItem was undefined, so this was my solution for it
-    let existingCities = JSON.parse(localStorage.getItem("cityList") || "[]");
-
-    if (existingCities.length !== 0) {
-      this.setState({
-        hasSavedCities: true,
-        savedCities: existingCities,
-      });
-    }
-  }
-
   render() {
-    const {
-      searchDone,
-      weatherData,
-      hasSavedCities,
-      savedCities,
-      errorMessage,
-    } = this.state;
+    const { searchDone, weatherData, cityList, errorMessage } = this.props;
 
     return (
       <div className="App">
@@ -100,15 +58,11 @@ class App extends Component {
           error={errorMessage}
         />
         {searchDone && (
-          <WeatherCard
-            weatherData={weatherData}
-            savedCities={savedCities}
-            callBackFromParent={this.updateSavedCities}
-          />
+          <WeatherCard weatherData={weatherData} savedCities={cityList} />
         )}
-        {hasSavedCities && (
+        {cityList.length > 0 && (
           <Favourites
-            savedCities={savedCities}
+            savedCities={cityList}
             callBackFromParent={this.callWeatherData}
           />
         )}
@@ -117,4 +71,17 @@ class App extends Component {
   }
 }
 
-export default App;
+const mapStateToProps = (state) => ({
+  searchDone: state.searchDone,
+  weatherData: state.weatherData,
+  cityList: state.cityList,
+  errorMessage: state.errorMessage,
+});
+
+const mapDispatchToProps = {
+  addCity,
+  removeCity,
+  setWeatherData,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
