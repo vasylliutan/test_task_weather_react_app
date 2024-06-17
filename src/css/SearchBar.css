@@ -1,0 +1,32 @@
+.SearchBar {
+  text-align: center;
+  margin: 3rem 0 2rem;
+}
+
+.SearchBar-input {
+  width: 30rem;
+}
+
+.SearchBar .message {
+  width: 20rem;
+  margin: 0 auto 2rem;
+  animation: fadeInDown 1s;
+}
+
+.custom-search-button {
+  background-color: #bdd7f4; /* Колір фону */
+  color: #fff; /* Колір тексту */
+  border-radius: 5px; /* Радіус заокруглення */
+  padding: 10px 20px 0px 10px;
+  font-size: 18px;
+}
+
+.custom-search-button:hover {
+  background-color: #a2caf4; /* Колір фону при наведенні */
+}
+
+@media screen and (max-width: 600px) {
+  .SearchBar-input {
+    width: 20rem;
+  }
+}
