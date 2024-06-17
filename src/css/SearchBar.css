@@ -14,15 +14,15 @@
 }
 
 .custom-search-button {
-  background-color: #bdd7f4; /* Колір фону */
-  color: #fff; /* Колір тексту */
-  border-radius: 5px; /* Радіус заокруглення */
+  background-color: #bdd7f4;
+  color: #fff;
+  border-radius: 5px;
   padding: 10px 20px 0px 10px;
   font-size: 18px;
 }
 
 .custom-search-button:hover {
-  background-color: #a2caf4; /* Колір фону при наведенні */
+  background-color: #a2caf4;
 }
 
 @media screen and (max-width: 600px) {
